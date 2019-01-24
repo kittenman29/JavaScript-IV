@@ -14,14 +14,26 @@ Prototype Refactor
   * destroy() // prototype method -> returns the string: 'Object was removed from the game.'
 */
 
-function GameObject(attributes) {
-    this.createdAt = attributes.createdAt;
-    this.dimensions = attributes.dimensions;
-  }
+// ES6 Class Method
+class GameObject {
+    constructor(attributes) {
+        this.createdAt = attributes.createdAt;
+        this.dimensions = attributes.dimensions;
+    }
+    destroy() {
+        return `${this.name} was destroyed from the game`;
+    }
+}
+
+// ES5 Prototype Method
+// function GameObject(attributes) {
+//     this.createdAt = attributes.createdAt;
+//     this.dimensions = attributes.dimensions;
+//   }
   
-  GameObject.prototype.destroy = function() {
-    return `${this.name} was destroyed from the game`;
-  }
+//   GameObject.prototype.destroy = function() {
+//     return `${this.name} was destroyed from the game`;
+//   }
   
   /*
     === CharacterStats ===
@@ -31,17 +43,30 @@ function GameObject(attributes) {
     * should inherit destroy() from GameObject's prototype
   */
   
-  function CharacterStats(charAttributes) {
-    GameObject.call(this, charAttributes);
-    this.healthPoints = charAttributes.healthPoints;
-    this.name = charAttributes.name;
+  // ES6 Class Method
+  class CharacterStats extends GameObject {
+    constructor(charAttributes) {
+        super(charAttributes);
+        this.healthPoints = charAttributes.healthPoints;
+        this.name = charAttributes.name;
+    }
+    takeDamage() {
+        return `${this.name} took damage`;
+    }
   }
+
+  // ES5 Prototype Method
+//   function CharacterStats(charAttributes) {
+//     GameObject.call(this, charAttributes);
+//     this.healthPoints = charAttributes.healthPoints;
+//     this.name = charAttributes.name;
+//   }
   
-  CharacterStats.prototype = Object.create(GameObject.prototype);
+//   CharacterStats.prototype = Object.create(GameObject.prototype);
   
-  CharacterStats.prototype.takeDamage = function() {
-    return `${this.name} took damage`;
-  }
+//   CharacterStats.prototype.takeDamage = function() {
+//     return `${this.name} took damage`;
+//   }
   
   /*
     === Humanoid (Having an appearance or character resembling that of a human.) ===
@@ -52,43 +77,80 @@ function GameObject(attributes) {
     * should inherit destroy() from GameObject through CharacterStats
     * should inherit takeDamage() from CharacterStats
   */
+
+
+// ES6 Class Method
+class Humanoid extends CharacterStats {
+    constructor(humanAttributes) {
+        super(humanAttributes);
+        this.team = humanAttributes.team;
+        this.weapons = humanAttributes.weapons;
+        this.language = humanAttributes.language;
+    }
+    greet() {
+        return(`${this.name} offers a greeting in ${this.language}`); 
+    }
+}
+
+// // ES5 Prototype Method
+//   function Humanoid(humanAttributes) {
+//     CharacterStats.call(this, humanAttributes)
+//     this.team = humanAttributes.team;
+//     this.weapons = humanAttributes.weapons;
+//     this.language = humanAttributes.language;
+//   }
   
-  function Humanoid(humanAttributes) {
-    CharacterStats.call(this, humanAttributes)
-    this.team = humanAttributes.team;
-    this.weapons = humanAttributes.weapons;
-    this.language = humanAttributes.language;
-  }
+//   Humanoid.prototype = Object.create(CharacterStats.prototype);
   
-  Humanoid.prototype = Object.create(CharacterStats.prototype);
-  
-  Humanoid.prototype.greet = function() {
-    return(`${this.name} offers a greeting in ${this.language}`);
-  }
+//   Humanoid.prototype.greet = function() {
+//     return(`${this.name} offers a greeting in ${this.language}`);
+//   }
   
   // Hero *************************
+
+  // ES6 Class Method
+  class Hero extends Humanoid {
+    constructor(heroAttributes) {
+        super(heroAttributes);
+    }
+    saveYou() {
+        return `${this.name} is here to save the day!`;
+    }
+}
+
+  // ES5 Prototype Method
+//   function Hero(heroAttributes) {
+//     Humanoid.call(this, heroAttributes)
+//   }
   
-  function Hero(heroAttributes) {
-    Humanoid.call(this, heroAttributes)
-  }
+//   Hero.prototype = Object.create(Humanoid.prototype);
   
-  Hero.prototype = Object.create(Humanoid.prototype);
-  
-  Hero.prototype.saveYou = function() {
-    return `${this.name} is here to save the day!`;
-  }
+//   Hero.prototype.saveYou = function() {
+//     return `${this.name} is here to save the day!`;
+//   }
   
   // Villain ******************************************
   
-  function Villain(villainAttributes) {
-    Humanoid.call(this, villainAttributes)
-  }
+ // ES6 Class Method
+  class Villain extends Humanoid {
+    constructor(villainAttributes) {
+        super(villainAttributes);
+    }
+    evilThing() {
+        return `${this.name} tries to pee on you like R Kelly`;
+    }
+}
+
+// ES5 Prototype Method
+//   function Villain(villainAttributes) {
+//     Humanoid.call(this, villainAttributes)
+//   }
   
-  Villain.prototype = Object.create(Humanoid.prototype);
+//   Villain.prototype = Object.create(Humanoid.prototype);
   
-  Villain.prototype.evilThing = function() {
-    return `${this.name} tries to pee on you like R Kelly`;
-  }
+//   Villain.prototype.evilThing = function() {
+//     return `${this.name} tries to pee on you like R Kelly`;
+//   }
   
    
   /*
